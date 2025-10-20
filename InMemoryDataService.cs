@@ -11,8 +11,17 @@ namespace LCNXY1_ITCompanyManager
 {
     public class InMemoryDataService : IDataService
     {
-        public ObservableCollection<Project> 
-            {}
+        public ObservableCollection<Project> LoadProjects()
+            {
+            
+var p1 =new Project()
+p1.Tasks.Add( new TaskItem(,6)
+p1.Tasks.Add( new TaskItem(,8)
+
+         var p2 =new Project()
+p2.Tasks.Add( new TaskItem(,4)
+p2.Tasks.Add( new TaskItem(,5)   
+            }
 
 
 
@@ -47,3 +56,4 @@ namespace LCNXY1_ITCompanyManager
         }
     }
 }
+
