@@ -6,7 +6,81 @@
         xmlns:local="clr-namespace:LCNXY1_ITCompanyManager"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext> 
+    <Grid Margin="12">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Bal: fejlesztők listája -->
+        <ListBox x:Name="DeveloperList" Grid.Column="0"
+                 ItemsSource="{Binding Developers}"
+                 SelectedItem="{Binding SelectedDeveloper}"
+                 DisplayMemberPath="Name" Margin="0,0,8,0">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Background" Value="White" />
+                    <Style.Triggers>
+                        <!-- Ha folyamatban van (sárga) -->
+                        <DataTrigger Binding="{Binding HasPendingTicket}" Value="True">
+                            <Setter Property="Background" Value="LightGoldenrodYellow" />
+                        </DataTrigger>
+                        <!-- Ha vannak lezárt napi ticketek (zöld) -->
+                        <DataTrigger Binding="{Binding DailyClosedTickets}" Value="0">
+                            <!-- nulla esetén fehér - lásd alább a másik trigger -->
+                            <Setter Property="Background" Value="White" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding DailyClosedTickets}" Value="{x:Static sys:Int32.MaxValue}">
+                            <!-- sosem fut le, helybe hozok egy MultiDataTrigger helyett egyszerű logikát a template-ben -->
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+
+        <!-- Jobb: részletek és vezérlők -->
+        <StackPanel Grid.Column="1" Margin="10,0,0,0">
+            <TextBlock Text="Kiválasztott fejlesztő:" FontWeight="Bold" />
+            <TextBlock Text="{Binding SelectedDeveloper.Name}" FontSize="16" />
+            <TextBlock Text="{Binding SelectedDeveloper.Role}" FontStyle="Italic" />
+            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                <TextBlock Text="Tapasztalat: " />
+                <TextBlock Text="{Binding SelectedDeveloper.ExperienceYears}" />
+                <TextBlock Text=" év" Margin="2,0,0,0"/>
+            </StackPanel>
+
+            <Separator Margin="0,10,0,10"/>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Napi lezárt ticketek: " />
+                <TextBlock Text="{Binding SelectedDeveloper.DailyClosedTickets}" FontWeight="Bold" FontSize="18" Margin="6,0,0,0"/>
+                <TextBlock Text="  " />
+                <TextBlock Text="Aktuális ticket súlyosság: " />
+                <TextBlock Text="{Binding SelectedDeveloper.CurrentTicketSeverity}" FontWeight="Bold" Margin="6,0,0,0"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                <Button Content="Assign Ticket" Command="{Binding AssignTicketCommand}" Width="120" Margin="0,0,10,0"/>
+                <Button Content="Collect Daily Reports" Command="{Binding CollectDailyReportsCommand}" Width="160"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                <Button Content="New Dev" Command="{Binding NewDeveloperCommand}" Width="90" Margin="0,0,10,0"/>
+                <Button Content="Delete" Command="{Binding DeleteDeveloperCommand}" Width="90" Margin="0,0,10,0"/>
+                <Button Content="Edit" Command="{Binding EditDeveloperCommand}" Width="90"/>
+            </StackPanel>
+
+            <Separator Margin="0,20,0,10"/>
+
+            <TextBlock Text="Összes begyűjtött lezárt ticket:" FontWeight="Bold" />
+            <TextBlock Text="{Binding TotalCollectedClosedTickets}" FontSize="20" Foreground="DarkSlateBlue" FontWeight="SemiBold"/>
+
+            <TextBlock Text="Megjegyzés: sárga = folyamatban, zöld = van lezárt napi ticket" Margin="0,16,0,0" FontStyle="Italic" Foreground="Gray"/>
+        </StackPanel>ísAÍ
 
     </Grid>
 </Window>
